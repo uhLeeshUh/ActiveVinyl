@@ -1,3 +1,17 @@
+CREATE TABLE artists (
+  id INTEGER PRIMARY KEY,
+  fname VARCHAR(255) NOT NULL,
+  lname VARCHAR(255) NOT NULL,
+);
+
+CREATE TABLE records (
+  id INTEGER PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  artist_id INTEGER NOT NULL
+
+  FOREIGN KEY(artist_id) REFERENCES artist(id)
+);
+
 CREATE TABLE tracks (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -6,19 +20,7 @@ CREATE TABLE tracks (
   FOREIGN KEY(record_id) REFERENCES record(id)
 );
 
-CREATE TABLE records (
-  id INTEGER PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  artist_id INTEGER, NOT NULL
 
-  FOREIGN KEY(artist_id) REFERENCES artist(id)
-);
-
-CREATE TABLE artists (
-  id INTEGER PRIMARY KEY,
-  fname VARCHAR(255) NOT NULL,
-  lname VARCHAR(255) NOT NULL
-);
 
 INSERT INTO
   artists (id, fname, lname)

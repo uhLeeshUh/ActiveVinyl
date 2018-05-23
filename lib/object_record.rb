@@ -1,7 +1,7 @@
 require_relative 'db_connection'
 require 'active_support/inflector'
 
-class SQLObject
+class ObjectRecord
   def self.columns
 
     @table_info ||= DBConnection.execute2(<<-SQL)
@@ -76,7 +76,6 @@ class SQLObject
 
   end
 
-
   def attributes
     @attributes ||= {}
   end
@@ -87,24 +86,30 @@ class SQLObject
     end
   end
 
+  def save
+    if attributes[:id]
+      update
+    else
+      insert
+    end
+  end
 
-  #make private
+  private
+
   def insert
     cols = attributes.keys.map(&:to_s).join(", ")
     vals = (["?"] * (self.class.columns.length - 1)).join(", ")
     passed_vals = attribute_values[1..-1]
 
     DBConnection.execute(<<-SQL, *passed_vals)
-      INSERT INTO
-        #{self.class.table_name} (#{cols})
-      VALUES
-        (#{vals})
+    INSERT INTO
+    #{self.class.table_name} (#{cols})
+    VALUES
+    (#{vals})
     SQL
     self.id = DBConnection.last_insert_row_id
   end
 
-
-  #make private
   def update
     cols = (self.attributes.keys - [:id]).map(&:to_s)
 
@@ -117,20 +122,13 @@ class SQLObject
     end
 
     DBConnection.execute(<<-SQL, *vals, self.id)
-      UPDATE
-        #{self.class.table_name}
-      SET
-        #{new_cols}
-      WHERE
-        id = ?
+    UPDATE
+    #{self.class.table_name}
+    SET
+    #{new_cols}
+    WHERE
+    id = ?
     SQL
   end
 
-  def save
-    if attributes[:id]
-      update
-    else
-      insert
-    end
-  end
 end

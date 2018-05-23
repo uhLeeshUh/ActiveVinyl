@@ -1,5 +1,5 @@
 require_relative 'db_connection'
-require_relative 'sql_object'
+require_relative 'object_record'
 require 'byebug'
 
 module Searchable
@@ -27,6 +27,6 @@ module Searchable
   end
 end
 
-class SQLObject
+class ObjectRecord
   extend Searchable
 end

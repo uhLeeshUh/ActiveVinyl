@@ -62,6 +62,6 @@ module Associatable
   end
 end
 
-class SQLObject
+class ObjectRecord
   extend Associatable
 end
